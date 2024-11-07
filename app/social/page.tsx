@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 const navItems = [
   { icon: '💬', label: 'Chat', id: 'chat' },
@@ -51,9 +52,12 @@ export default function SocialPage() {
             <div className="w-3 h-3 rounded-full bg-yellow-500" />
             <div className="w-3 h-3 rounded-full bg-green-500" />
           </div>
-          <div className="flex-1 flex justify-start">
-            <span className="text-violet-400 text-xl font-bold">clio-social</span>
-          </div>
+          <Link href="/social" className="text-md pl-3 font-bold hover:opacity-90 transition-colors ">
+          <span className=" text-violet-400">cli</span>
+          <span className=" text-violet-500">o</span>
+          <span className=" text-violet-300 text-md "> soci</span>
+          <span className=" text-violet-400  ">al</span>
+        </Link>
           <button
             onClick={() => router.back()}
             className="absolute right-4 text-sm text-violet-400 hover:text-violet-500 transition-colors"
@@ -65,9 +69,9 @@ export default function SocialPage() {
         {/* Main content area */}
         <div className="flex h-[calc(100%-3rem)] overflow-hidden">
           {/* Sidebar */}
-          <div className="rounded-2xl bg-zinc-900/50 backdrop-blur-lg border border-zinc-800/50 w-72">
+          <div className="rounded-2xl  bg-zinc-900/50 backdrop-blur-lg border border-zinc-800/50 w-72">
             <div className="p-4 flex items-center justify-between border-b border-zinc-800/50">
-              <h1 className="font-medium text-violet-400">Social</h1>
+              <h1 className="font-medium text-white-300">Social</h1>
             </div>
 
             <div className="p-3">
@@ -133,12 +137,12 @@ export default function SocialPage() {
                       ))}
                     </div>
                     <div className="w-full max-w-md space-y-4">
-                      <div className="bg-zinc-800/50 rounded-lg p-4">
-                        <h2 className="text-violet-400 font-medium">Alice's Post</h2>
+                    <div className="bg-zinc-800/50 rounded-lg p-4">
+                        <h2 className="text-violet-400 font-medium">Alice&apos;s Post</h2>
                         <p className="text-zinc-300 mt-2">Just finished a great study session!</p>
                       </div>
                       <div className="bg-zinc-800/50 rounded-lg p-4">
-                        <h2 className="text-violet-400 font-medium">Bob's Update</h2>
+                        <h2 className="text-violet-400 font-medium">Bob&apos;s Update</h2>
                         <p className="text-zinc-300 mt-2">Collaborative study is the best way to learn!</p>
                       </div>
                     </div>

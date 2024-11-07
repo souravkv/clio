@@ -2,6 +2,7 @@
 
 import HomePageContent from '../components/home-page'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { FaGithub, FaTwitter, FaInstagram, FaCoffee, FaLinkedin, FaHeart } from 'react-icons/fa'
@@ -97,7 +98,7 @@ export default function HomePage() {
               </button>
             </div>
             <div className="text-center">
-              <img src={zourv.src} alt="Sourav KV" className="w-40 h-40 rounded-full mx-auto mb-4" />
+              <Image src={zourv.src} alt="Sourav KV" className="w-40 h-40 rounded-full mx-auto mb-4" />
               <h3 className="text-2xl font-medium text-white">Sourav KV</h3>
               <p className="text-zinc-400 mb-4">Connect with me:</p>
               <div className="flex justify-center gap-6">
