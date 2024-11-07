@@ -1,101 +1,126 @@
-import Image from "next/image";
+'use client'
 
-export default function Home() {
+import HomePageContent from '../components/home-page'
+import Link from 'next/link'
+import { useEffect, useRef, useState } from 'react'
+import { motion } from 'framer-motion'
+import { FaGithub, FaTwitter, FaInstagram, FaCoffee, FaLinkedin, FaHeart } from 'react-icons/fa'
+import zourv from '../assets/zourv.jpg'
+
+export default function HomePage() {
+  const cursorRef = useRef<HTMLDivElement | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  useEffect(() => {
+    const cursor = cursorRef.current
+    if (!cursor) return
+
+    const moveCursor = (e: MouseEvent) => {
+      cursor.style.left = `${e.pageX}px`
+      cursor.style.top = `${e.pageY}px`
+    }
+
+    document.addEventListener('mousemove', moveCursor)
+
+    return () => {
+      document.removeEventListener('mousemove', moveCursor)
+    }
+  }, [])
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div className="relative min-h-screen bg-black">
+      {/* Animated gradient background */}
+      <div className="fixed inset-0 bg-gradient-to-br from-blue-600/30 via-purple-600/30 to-pink-600/30 animate-pulse-slow" />
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      {/* Grid pattern for texture */}
+      <div className="fixed inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:50px_50px]" />
+
+      {/* Floating orbs */}
+      <div className="fixed inset-0 overflow-hidden">
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-500/20 rounded-full blur-3xl animate-pulse-slow" />
+        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl animate-pulse-slower" />
+        <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-pink-500/20 rounded-full blur-3xl animate-pulse-slow" />
+      </div>
+
+      {/* Brand logo at the top */}
+      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-50">
+        <span className="text-5xl font-bold text-white">
+          <span className="text-blue-400">cli</span>
+          <span className="text-blue-500">o</span>
+        </span>
+      </div>
+
+      {/* Support Me button */}
+      <motion.button
+        onClick={() => setIsModalOpen(true)}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        className="absolute top-4 right-4 bg-blue-500/20 text-blue-400 p-3 rounded-full hover:bg-blue-500/30 transition-colors z-50 shadow-lg"
+      >
+        <FaHeart size={24} />
+      </motion.button>
+
+      {/* Content */}
+      <div className="relative z-10">
+        <HomePageContent />
+      </div>
+
+      {/* Bottom navigation bar */}
+      <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 w-[90%] max-w-4xl bg-zinc-900/50 backdrop-blur-md rounded-lg p-3 flex justify-between items-center text-white shadow-lg z-50">
+        <div className="flex items-center gap-4">
+          <Link href="/login" className="px-3 py-1 text-sm font-light text-blue-300 hover:text-blue-400 transition-colors duration-300">Login</Link>
+          <Link href="/signup" className="px-3 py-1 text-sm font-light text-blue-300 hover:text-blue-400 transition-colors duration-300">Signup</Link>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        <div className="flex items-center gap-4">
+          <Link href="/docs" className="px-3 py-1 text-sm font-light text-blue-300 hover:text-blue-400 transition-colors duration-300">Docs</Link>
+          <Link href="/support" className="px-3 py-1 text-sm font-light text-blue-300 hover:text-blue-400 transition-colors duration-300">Support</Link>
+          <Link href="/premium" className="px-3 py-1 text-sm font-light text-blue-300 hover:text-blue-400 transition-colors duration-300">Premium</Link>
+        </div>
+      </div>
+
+      {/* Custom cursor */}
+      <div ref={cursorRef} className="fixed w-4 h-4 border border-white rounded-full pointer-events-none z-50 opacity-70" style={{ transform: 'translate(-50%, -50%)' }} />
+
+      {/* Support Me Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            className="bg-zinc-900/90 rounded-xl overflow-hidden border border-zinc-800/50 shadow-2xl w-full max-w-lg p-8"
+          >
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-3xl font-bold text-white">Support Me</h2>
+              <button onClick={() => setIsModalOpen(false)} className="text-white hover:text-red-400 transition-colors">
+                ✕
+              </button>
+            </div>
+            <div className="text-center">
+              <img src={zourv.src} alt="Sourav KV" className="w-40 h-40 rounded-full mx-auto mb-4" />
+              <h3 className="text-2xl font-medium text-white">Sourav KV</h3>
+              <p className="text-zinc-400 mb-4">Connect with me:</p>
+              <div className="flex justify-center gap-6">
+                <Link href="https://github.com/souravkv" className="text-blue-400 hover:text-blue-500 transition-colors">
+                  <FaGithub size={30} />
+                </Link>
+                <Link href="https://x.com/m_aysou" className="text-blue-400 hover:text-blue-500 transition-colors">
+                  <FaTwitter size={30} />
+                </Link>
+                <Link href="https://www.instagram.com/zourv_/" className="text-blue-400 hover:text-blue-500 transition-colors">
+                  <FaInstagram size={30} />
+                </Link>
+                <Link href="https://buymeacoffee.com/spexod" className="text-blue-400 hover:text-blue-500 transition-colors">
+                  <FaCoffee size={30} />
+                </Link>
+                <Link href="https://www.linkedin.com/in/sourav-kv/" className="text-blue-400 hover:text-blue-500 transition-colors">
+                  <FaLinkedin size={30} />
+                </Link>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </div>
-  );
+  )
 }
