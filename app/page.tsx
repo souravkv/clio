@@ -1,6 +1,12 @@
 'use client'
 
 import HomePageContent from '../components/home-page'
+
+import Image from 'next/image'
+import zourv from '../assets/zourv.jpg'
+import { FaGithub, FaTwitter, FaInstagram, FaCoffee, FaLinkedin } from 'react-icons/fa'
+
+
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -16,6 +22,7 @@ import {
 import { doc, setDoc, getDoc } from 'firebase/firestore'
 import { UserData, UserInterests } from '../types/user'
 import Typewriter from 'typewriter-effect'
+import { FirebaseError } from '../types/error'
 
 interface UserProfile {
   name: string;
@@ -41,31 +48,23 @@ export default function HomePage() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false)
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
   const [user, setUser] = useState<User | null>(null)
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user)
       if (user) {
         try {
-          console.log('Fetching user profile...')
           const userDocRef = doc(db, 'users', user.uid)
           const userDocSnap = await getDoc(userDocRef)
           
           if (userDocSnap.exists()) {
             const userData = userDocSnap.data()
-            console.log('User profile data:', userData)
             setUserProfile({
               name: userData.name,
               age: userData.age
             })
-          } else {
-            console.log('No user profile found')
           }
         } catch (error) {
           console.error('Error fetching user profile:', error)
@@ -73,7 +72,6 @@ export default function HomePage() {
       } else {
         setUserProfile(null)
       }
-      setIsLoading(false)
     })
 
     return () => unsubscribe()
@@ -91,32 +89,6 @@ export default function HomePage() {
     document.addEventListener('mousemove', moveCursor)
     return () => document.removeEventListener('mousemove', moveCursor)
   }, [])
-
-  const handleSignup = async (e: React.FormEvent) => {
-    e.preventDefault()
-    try {
-      await createUserWithEmailAndPassword(auth, email, password)
-      setIsSignupModalOpen(false)
-      setEmail('')
-      setPassword('')
-      setError('')
-    } catch (error: any) {
-      setError(error.message)
-    }
-  }
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault()
-    try {
-      await signInWithEmailAndPassword(auth, email, password)
-      setIsLoginModalOpen(false)
-      setEmail('')
-      setPassword('')
-      setError('')
-    } catch (error: any) {
-      setError(error.message)
-    }
-  }
 
   const handleLogout = async () => {
     try {
@@ -168,17 +140,9 @@ export default function HomePage() {
           return
         }
 
-        // Validate step 2 fields
-        if (!name || !age || !fieldOfStudy) {
-          setLocalError('Please fill in all required fields')
-          return
-        }
-
         try {
-          console.log('Creating user account...')
           const userCredential = await createUserWithEmailAndPassword(auth, localEmail, localPassword)
           
-          console.log('User account created, saving profile data...')
           const userData: UserData = {
             name,
             age: parseInt(age),
@@ -190,25 +154,25 @@ export default function HomePage() {
 
           try {
             await setDoc(doc(db, 'users', userCredential.user.uid), userData)
-            console.log('Profile data saved successfully')
             setIsSignupModalOpen(false)
-          } catch (firestoreError: any) {
-            console.error('Firestore Error:', firestoreError)
+          } catch (error: unknown) {
+            const firebaseError = error as FirebaseError
+            console.error('Firestore Error:', firebaseError)
             setLocalError('Failed to save profile data. Please try again.')
           }
-        } catch (authError: any) {
-          console.error('Auth Error:', authError)
-          setLocalError(authError.message)
+        } catch (error: unknown) {
+          const firebaseError = error as FirebaseError
+          setLocalError(firebaseError.message)
         }
         return
       }
 
-      // Login logic
       try {
         await signInWithEmailAndPassword(auth, localEmail, localPassword)
         setIsLoginModalOpen(false)
-      } catch (error: any) {
-        setLocalError(error.message)
+      } catch (error: unknown) {
+        const firebaseError = error as FirebaseError
+        setLocalError(firebaseError.message)
       }
     }
 
@@ -503,23 +467,48 @@ export default function HomePage() {
               </button>
             </div>
             <div className="text-center">
-              <Image src={zourv.src} alt="Sourav KV" className="w-40 h-40 rounded-full mx-auto mb-4" />
+              <Image src={zourv} alt="Sourav KV" className="w-40 h-40 rounded-full mx-auto mb-4" />
               <h3 className="text-2xl font-medium text-white">Sourav KV</h3>
               <p className="text-zinc-400 mb-4">Connect with me:</p>
               <div className="flex justify-center gap-6">
-                <Link href="https://github.com/souravkv" className="text-blue-400 hover:text-blue-500 transition-colors">
+                <Link 
+                  href="https://github.com/souravkv" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-blue-400 hover:text-blue-500 transition-colors"
+                >
                   <FaGithub size={30} />
                 </Link>
-                <Link href="https://x.com/m_aysou" className="text-blue-400 hover:text-blue-500 transition-colors">
+                <Link 
+                  href="https://x.com/m_aysou" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-blue-400 hover:text-blue-500 transition-colors"
+                >
                   <FaTwitter size={30} />
                 </Link>
-                <Link href="https://www.instagram.com/zourv_/" className="text-blue-400 hover:text-blue-500 transition-colors">
+                <Link 
+                  href="https://www.instagram.com/zourv_/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-blue-400 hover:text-blue-500 transition-colors"
+                >
                   <FaInstagram size={30} />
                 </Link>
-                <Link href="https://buymeacoffee.com/spexod" className="text-blue-400 hover:text-blue-500 transition-colors">
+                <Link 
+                  href="https://buymeacoffee.com/spexod" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-blue-400 hover:text-blue-500 transition-colors"
+                >
                   <FaCoffee size={30} />
                 </Link>
-                <Link href="https://www.linkedin.com/in/sourav-kv/" className="text-blue-400 hover:text-blue-500 transition-colors">
+                <Link 
+                  href="https://www.linkedin.com/in/sourav-kv/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-blue-400 hover:text-blue-500 transition-colors"
+                >
                   <FaLinkedin size={30} />
                 </Link>
               </div>

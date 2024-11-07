@@ -6,8 +6,13 @@ import { auth, db } from '../../lib/firebase'
 import { doc, getDoc } from 'firebase/firestore'
 import Typewriter from 'typewriter-effect'
 
+interface UserData {
+  name: string;
+  interests: Record<string, boolean>;
+}
+
 export default function HomePage() {
-  const [userData, setUserData] = useState<{name: string, interests: any} | null>(null)
+  const [userData, setUserData] = useState<UserData | null>(null)
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -29,7 +34,7 @@ export default function HomePage() {
   const getRandomInterest = () => {
     if (!userData?.interests) return ''
     const activeInterests = Object.entries(userData.interests)
-      .filter(([_, value]) => value)
+      .filter(([, value]) => value)
       .map(([key]) => key)
     return activeInterests[Math.floor(Math.random() * activeInterests.length)]
   }
