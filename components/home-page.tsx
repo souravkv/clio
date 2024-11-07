@@ -3,12 +3,20 @@
 import Link from 'next/link'
 import Typewriter from 'typewriter-effect'
 import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
+import { auth } from '../lib/firebase'
+import { User } from 'firebase/auth'
 
 const HomePageContent = () => {
   const [mounted, setMounted] = useState(false)
+  const [user, setUser] = useState<User | null>(null)
 
   useEffect(() => {
     setMounted(true)
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setUser(user)
+    })
+    return () => unsubscribe()
   }, [])
 
   if (!mounted) return null
@@ -21,10 +29,36 @@ const HomePageContent = () => {
       {/* Grid pattern overlay */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:50px_50px]" />
 
+      {/* Auth buttons in top left */}
+      {!user && (
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="absolute top-4 left-4 z-50 flex items-center gap-3"
+        >
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => window.dispatchEvent(new CustomEvent('openLogin'))}
+            className="px-4 py-1.5 rounded-full bg-zinc-900/80 backdrop-blur-sm border border-zinc-800/50 text-blue-400 hover:text-blue-300 transition-all duration-300 text-sm"
+          >
+            Sign In
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => window.dispatchEvent(new CustomEvent('openSignup'))}
+            className="px-4 py-1.5 rounded-full bg-zinc-900/80 backdrop-blur-sm border border-zinc-800/50 text-violet-400 hover:text-violet-300 transition-all duration-300 text-sm"
+          >
+            Sign Up
+          </motion.button>
+        </motion.div>
+      )}
+
       <div className="relative z-10 max-w-3xl w-full space-y-12">
         {/* Main heading with typewriter */}
         <div className="text-center space-y-4">
-          <h1 className="text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500">
+          <h1 className="text-6xl font-bold tracking-tight">
             <Typewriter
               onInit={(typewriter) => {
                 typewriter
@@ -32,10 +66,13 @@ const HomePageContent = () => {
                   .start();
               }}
               options={{
-                cursor: '|',
+                cursor: '...',
                 loop: false,
                 autoStart: true,
                 delay: 50,
+                deleteSpeed: 9999999,
+                wrapperClassName: "text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-violet-400",
+                cursorClassName: "text-violet-400 animate-pulse"
               }}
             />
           </h1>
@@ -46,7 +83,7 @@ const HomePageContent = () => {
           </p>
         </div>
 
-        {/* Call to action button with hover effects */}
+        {/* Call to action button */}
         <div className="flex flex-col items-center mt-12 animate-fade-in opacity-0 animation-delay-2000">
           <Link 
             href="/select" 
