@@ -22,9 +22,11 @@ function TopNav() {
         <div className="w-3 h-3 rounded-full bg-green-500" />
       </div>
       <div className="flex-1 flex justify-between items-center px-4">
-        <Link href="/home" className="text-xl font-bold hover:opacity-90 transition-colors">
+        <Link href="/home" className="text-md font-bold hover:opacity-90 transition-colors ">
           <span className="text-blue-400">cli</span>
           <span className="text-blue-500">o</span>
+          <span className="text-blue-300 text-md "> stu</span>
+          <span className="text-blue-400  ">dy</span>
         </Link>
         <button 
           onClick={() => router.back()}

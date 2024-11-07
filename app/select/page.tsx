@@ -39,9 +39,10 @@ export default function SelectPage() {
               <div className="w-3 h-3 rounded-full bg-yellow-500" />
               <div className="w-3 h-3 rounded-full bg-green-500" />
             </div>
-            <div className="flex-1 flex justify-start">
-              <span className="text-blue-400 text-xl font-bold">clio-study</span>
-            </div>
+            <Link href="/home" className="text-xl pl-4 font-bold hover:opacity-90 transition-colors">
+          <span className="text-blue-400">cli</span>
+          <span className="text-blue-500">o</span>
+        </Link>
             <button
               onClick={() => router.back()}
               className="absolute right-4 text-sm text-blue-400 hover:text-blue-500 transition-colors"
