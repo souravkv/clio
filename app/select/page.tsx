@@ -4,9 +4,27 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import Typewriter from 'typewriter-effect'
+import { useEffect, useState } from 'react'
+import { auth, db } from '../../lib/firebase'
+import { doc, getDoc } from 'firebase/firestore'
+import { getRandomSelectMessage } from '../../utils/messages'
 
 export default function SelectPage() {
   const router = useRouter()
+  const [userName, setUserName] = useState<string>('')
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const user = auth.currentUser
+      if (user) {
+        const userDoc = await getDoc(doc(db, 'users', user.uid))
+        if (userDoc.exists()) {
+          setUserName(userDoc.data().name)
+        }
+      }
+    }
+    fetchUserData()
+  }, [])
 
   return (
     <div className="relative min-h-screen">
@@ -58,23 +76,17 @@ export default function SelectPage() {
               animate={{ opacity: 1, y: 0 }}
               className="text-center flex flex-col items-center mb-16"
             >
-              <span className="text-5xl font-bold text-blue-400 mb-3 tracking-tight">Choose your</span>
-              <div className="text-4xl font-bold text-violet-300 h-16">
+              <div className="text-4xl font-bold h-32 flex items-center">
                 <Typewriter
                   options={{
-                    strings: [
-                      'experience',
-                      'way of studying',
-                      'learning path',
-                      'study companion',
-                      'learning journey'
-                    ],
+                    strings: [getRandomSelectMessage(userName || 'there')],
                     autoStart: true,
-                    loop: true,
-                    deleteSpeed: 50,
+                    loop: false,
+                    deleteSpeed: 9999999,
                     delay: 80,
-                    wrapperClassName: "text-violet-300",
-                    cursorClassName: "text-violet-400"
+                    wrapperClassName: "text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-violet-400",
+                    cursorClassName: "text-violet-400 animate-pulse",
+                    cursor: '...'
                   }}
                 />
               </div>
