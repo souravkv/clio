@@ -433,7 +433,7 @@ export default function HomePage() {
           <Link href="/support" className="px-3 py-1 text-sm font-light text-blue-300 hover:text-blue-400 transition-colors duration-300">
             Support
           </Link>
-          <Link href="/premium" className="px-3 py-1 text-sm font-light text-blue-300 hover:text-blue-400 transition-colors duration-300">
+          <Link href="/premium" className="px-3 py-1 text-sm font-light text-violet-400 hover:text-violet-600 transition-colors duration-300">
             Premium
           </Link>
           <Link href="/contribute" className="px-3 py-1 text-sm font-light text-blue-300 hover:text-blue-400 transition-colors duration-300">
