@@ -14,3 +14,28 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+
+// Add these types to your schema
+interface UserPremiumData {
+  isPremium: boolean;
+  college?: string;
+  branch?: string;
+  currentSemester?: number;
+  cgpa?: number;
+  semesters?: {
+    [key: string]: {
+      subjects: {
+        name: string;
+        ca?: {
+          marks?: number;
+          maxMarks?: number;
+          date?: string;
+        }[];
+        examPapers?: {
+          year: string;
+          link: string;
+        }[];
+      }[];
+    };
+  };
+}

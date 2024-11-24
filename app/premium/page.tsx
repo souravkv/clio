@@ -26,8 +26,13 @@ const subscriptionOptions = [
   },
   {
     name: 'Clio X',
-    price: '₹399/-',
+    price: 'Monthly  - ₹99/-',
     features: [
+      'College helper integration',
+      'CGPA tracking',
+      'Previous year papers access',
+      'CA marks management',
+      'Semester planning tools',
       'Clip private chat option',
       'Graph schedule',
       'Alarm system',
@@ -36,7 +41,7 @@ const subscriptionOptions = [
   },
   {
     name: 'Clio XX',
-    price: '₹799/-',
+    price: 'Monthly-₹299/-',
     features: [
       'One-on-one mentor program',
       'Better theme selection',

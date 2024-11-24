@@ -1,12 +1,16 @@
 'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { auth } from '../lib/firebase'
+import { Lock } from 'lucide-react'
+import { isPremiumUser } from '../lib/utils'
 
 interface NavItem {
   icon: string
   label: string
   href: string
+  premium?: boolean
 }
 
 const navItems: NavItem[] = [
@@ -17,6 +21,37 @@ const navItems: NavItem[] = [
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false)
+  const [isPremium, setIsPremium] = useState(false)
+
+  useEffect(() => {
+    const checkPremiumStatus = () => {
+      const user = auth.currentUser;
+      if (user && user.email) {
+        setIsPremium(isPremiumUser(user.email));
+      }
+    };
+    
+    checkPremiumStatus();
+    
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user && user.email) {
+        setIsPremium(isPremiumUser(user.email));
+      } else {
+        setIsPremium(false);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const premiumNavItems = [
+    {
+      icon: '🎓',
+      label: 'ClioX',
+      href: '/home/cliox',
+      premium: true
+    }
+  ]
 
   return (
     <div className={`rounded-2xl bg-zinc-900/50 backdrop-blur-lg border border-zinc-800/50 transition-all duration-300 ${
@@ -48,6 +83,23 @@ const Sidebar = () => {
           </Link>
         ))}
       </div>
+
+      {premiumNavItems.map((item) => (
+        <Link
+          key={item.label}
+          href={isPremium ? item.href : '/premium'}
+          className={`flex items-center gap-3 px-4 py-3 text-zinc-400 hover:text-white 
+            hover:bg-zinc-800/50 transition-colors relative group ${
+            !isPremium ? 'opacity-50' : ''
+          }`}
+        >
+          <span className="text-xl">{item.icon}</span>
+          <span>{item.label}</span>
+          {!isPremium && (
+            <Lock className="w-4 h-4 absolute right-4 text-zinc-500 group-hover:text-zinc-400" />
+          )}
+        </Link>
+      ))}
     </div>
   )
 }

@@ -19,10 +19,11 @@ import {
   onAuthStateChanged,
   User
 } from 'firebase/auth'
-import { doc, setDoc, getDoc } from 'firebase/firestore'
+import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore'
 import { UserData, UserInterests } from '../types/user'
 import Typewriter from 'typewriter-effect'
 import { FirebaseError } from '../types/error'
+import { isPremiumUser } from '../lib/utils'
 
 interface UserProfile {
   name: string;

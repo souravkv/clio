@@ -4,10 +4,23 @@ import Sidebar from '../../components/sidebar'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 
 function TopNav() {
   const router = useRouter()
+  const pathname = usePathname()
+
+  const handleGoBack = () => {
+    if (pathname === '/home' || pathname === '/home/cliox' || 
+        pathname === '/home/notes' || pathname === '/home/todo' || 
+        pathname === '/home/timetable') {
+      router.push('/select')
+    } else if (pathname === '/social') {
+      router.push('/select')
+    } else {
+      router.back()
+    }
+  }
 
   return (
     <motion.div 
@@ -29,7 +42,7 @@ function TopNav() {
           <span className="text-blue-400  ">dy</span>
         </Link>
         <button 
-          onClick={() => router.back()}
+          onClick={handleGoBack}
           className="px-4 py-2 text-sm text-zinc-400 hover:text-white transition-colors rounded-lg hover:bg-zinc-800/50"
         >
           Go Back
