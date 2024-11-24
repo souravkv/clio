@@ -24,6 +24,7 @@ import { UserData, UserInterests } from '../types/user'
 import Typewriter from 'typewriter-effect'
 import { FirebaseError } from '../types/error'
 import { isPremiumUser } from '../lib/utils'
+import { toast } from 'react-hot-toast'
 
 interface UserProfile {
   name: string;
@@ -94,7 +95,22 @@ export default function HomePage() {
   const handleLogout = async () => {
     try {
       await signOut(auth)
+      toast.success('Logged out successfully', {
+        icon: '👋',
+        style: {
+          borderRadius: '10px',
+          background: '#333',
+          color: '#fff',
+        },
+      })
     } catch (error: any) {
+      toast.error('Error signing out', {
+        style: {
+          borderRadius: '10px',
+          background: '#333',
+          color: '#fff',
+        },
+      })
       console.error('Error signing out:', error)
     }
   }

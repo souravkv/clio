@@ -1,13 +1,44 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import Typewriter from 'typewriter-effect'
 import { useEffect, useState } from 'react'
 import { auth, db } from '../../lib/firebase'
 import { doc, getDoc } from 'firebase/firestore'
 import { getRandomSelectMessage } from '../../utils/messages'
+
+function TopNav() {
+  const router = useRouter()
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 0.5 }}
+      className="h-12 bg-zinc-900 border-b border-zinc-800/50 flex items-center px-4 relative z-10"
+    >
+      <div className="flex items-center gap-2">
+        <div className="w-3 h-3 rounded-full bg-red-500" />
+        <div className="w-3 h-3 rounded-full bg-yellow-500" />
+        <div className="w-3 h-3 rounded-full bg-green-500" />
+      </div>
+      <div className="flex-1 flex justify-between items-center px-4">
+        <Link href="/select" className="text-md font-bold hover:opacity-90 transition-colors">
+          <span className="text-blue-400">cli</span>
+          <span className="text-blue-500">o</span>
+        </Link>
+        <button 
+          onClick={() => router.push('/')}
+          className="px-4 py-2 text-sm text-zinc-400 hover:text-white transition-colors rounded-lg hover:bg-zinc-800/50"
+        >
+          Go Back
+        </button>
+      </div>
+    </motion.div>
+  )
+}
 
 export default function SelectPage() {
   const router = useRouter()
@@ -51,23 +82,7 @@ export default function SelectPage() {
           />
 
           {/* Window title bar */}
-          <div className="h-12 bg-zinc-900 border-b border-zinc-800/50 flex items-center px-4 relative z-10">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-red-500" />
-              <div className="w-3 h-3 rounded-full bg-yellow-500" />
-              <div className="w-3 h-3 rounded-full bg-green-500" />
-            </div>
-            <Link href="/home" className="text-xl pl-4 font-bold hover:opacity-90 transition-colors">
-          <span className="text-blue-400">cli</span>
-          <span className="text-blue-500">o</span>
-        </Link>
-            <button
-              onClick={() => router.back()}
-              className="absolute right-4 text-sm text-blue-400 hover:text-blue-500 transition-colors"
-            >
-              Go Back
-            </button>
-          </div>
+          <TopNav />
 
           {/* Window content */}
           <div className="p-8 relative z-10">
